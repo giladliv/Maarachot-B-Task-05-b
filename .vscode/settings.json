@@ -1,0 +1,21 @@
+{
+    "files.associations": {
+        "iostream": "cpp",
+        "iterator": "cpp",
+        "memory": "cpp",
+        "optional": "cpp",
+        "atomic": "cpp",
+        "chrono": "cpp",
+        "array": "cpp",
+        "deque": "cpp",
+        "list": "cpp",
+        "string": "cpp",
+        "vector": "cpp",
+        "string_view": "cpp",
+        "unordered_map": "cpp",
+        "initializer_list": "cpp",
+        "iosfwd": "cpp",
+        "system_error": "cpp",
+        "typeinfo": "cpp"
+    }
+}

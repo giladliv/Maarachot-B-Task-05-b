@@ -9,6 +9,7 @@
 #include <fstream>
 #include <sstream>
 #include <stdexcept>
+#include "sources/Node.hpp"
 using namespace std;
 
 #include "sources/OrgChart.hpp"
@@ -53,4 +54,25 @@ int main() {
   {
     cout << it->size() << " " ;
   } // prints: 3 3 3 3 5 5
+
+  // Node a("hello");
+  // Node b("World");
+  // Node c("Yay");
+  // a.addNext(b);
+  // a.addNext(c);
+  // add(a, "bb");
+  // cout << a.getData() << endl;
+  // for (unsigned int i = 0; i < a._children.size(); i++)
+  // {
+  //   cout << a._children[i]->getData() << endl;
+  // }
+  
+  // auto ve = a.getNext();
+  // for (unsigned int i = 0; i < ve.size(); i++)
+  // {
+  //   cout << (ve[i] == a._children[i] ? "true": "false") << endl;
+  // }
+  
+  
+
 }

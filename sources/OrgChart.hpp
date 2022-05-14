@@ -4,20 +4,30 @@
 #include <string>
 #include <vector>
 #include <algorithm>
+#include <unordered_map>
+#include "Node.hpp"
 
 using namespace std;
+using ariel::Node;
 
 namespace ariel
 {
     class OrgChart
     {
+        private:
+            Node* _root;
+            unordered_map<string, vector<Node*>> _mapNameNodes;
+            void restartTree();
+            void addNodeToMap(Node* node);
+            static vector<Node*> levelOrderVect(Node* node);
+
         public:
             OrgChart();
             ~OrgChart();
-            OrgChart& add_root(string name);
-            OrgChart& add_sub(string head, string name);
+            OrgChart& add_root(const string& name);
+            OrgChart& add_sub(const string& head, const string& name);
 
-            friend ostream& operator<<(ostream& os, const OrgChart& org);
+            friend ostream& operator<<(ostream& os, OrgChart& org);
 
             class iterator
             {
@@ -29,19 +39,23 @@ namespace ariel
                     string* operator->();
                 
                 private:
+                    unsigned int _index;
+                    vector<Node*> _vectNode;
 
             };
             
             class level_iterator
             {
                 public:
-                    level_iterator();
+                    level_iterator(Node * node, bool isEnd = false);
                     level_iterator& operator++();
                     string operator*() const;
                     bool operator!=(const level_iterator& other);
                     string* operator->();
                     
                 private:
+                    unsigned int _index;
+                    vector<Node*> _vectNode;
 
             };
 
@@ -79,8 +93,6 @@ namespace ariel
             reverse_iterator end_reverse_order();
             preorder_iterator begin_preorder();
             preorder_iterator end_preorder();
-
-        private:
             
     };
     

@@ -115,12 +115,12 @@ OrgChart::level_iterator OrgChart::end_level_order()
 
 OrgChart::reverse_iterator OrgChart::begin_reverse_order()
 {
-    return OrgChart::reverse_iterator();
+    return OrgChart::reverse_iterator(_root);
 }
 
 OrgChart::reverse_iterator OrgChart::end_reverse_order()
 {
-    return OrgChart::reverse_iterator();
+    return OrgChart::reverse_iterator(_root, true);
 }
 
 OrgChart::preorder_iterator OrgChart::begin_preorder()
@@ -207,30 +207,33 @@ string* OrgChart::level_iterator::operator->()
 /******************************* reverse_iterator class *******************************/
 
 
-OrgChart::reverse_iterator::reverse_iterator()
+OrgChart::reverse_iterator::reverse_iterator(Node* node, bool isEnd) : level_iterator(node, isEnd)
 {
-
+    _vectNode = OrgChart::levelOrderVect(node);
+    reverse(_vectNode.begin(), _vectNode.end());
+    _index = isEnd ? _vectNode.size() : 0;
+    _vectNode.push_back(nullptr);
 }
 
-OrgChart::reverse_iterator& OrgChart::reverse_iterator::operator++()
-{
-    return (*this);
-}
+// OrgChart::reverse_iterator& OrgChart::reverse_iterator::operator++()
+// {
+//     return (*this);
+// }
 
-string OrgChart::reverse_iterator::operator*() const
-{
-    return "";
-}
+// string OrgChart::reverse_iterator::operator*() const
+// {
+//     return "";
+// }
 
-bool OrgChart::reverse_iterator::operator!=(const reverse_iterator& other)
-{
-    return (false);
-}
+// bool OrgChart::reverse_iterator::operator!=(const reverse_iterator& other)
+// {
+//     return (false);
+// }
 
-string* OrgChart::reverse_iterator::operator->()
-{
-    return nullptr;
-}
+// string* OrgChart::reverse_iterator::operator->()
+// {
+//     return nullptr;
+// }
 
 
 

@@ -53,20 +53,16 @@ namespace ariel
                     bool operator!=(const level_iterator& other);
                     string* operator->();
                     
-                private:
+                protected:
                     unsigned int _index;
                     vector<Node*> _vectNode;
 
             };
 
-            class reverse_iterator
+            class reverse_iterator : public OrgChart::level_iterator
             {
                 public:
-                    reverse_iterator();
-                    reverse_iterator& operator++();
-                    string operator*() const;
-                    bool operator!=(const reverse_iterator& other);
-                    string* operator->();
+                    reverse_iterator(Node* node, bool isEnd = false);
                 
                 private:
 

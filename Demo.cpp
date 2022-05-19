@@ -91,4 +91,6 @@ int main() {
   
   cout << count(organization.begin_level_order(), organization.end_level_order(), "CTO") << endl;
 
+  vector<int> b{1, 2, 3, 4};
+
 }

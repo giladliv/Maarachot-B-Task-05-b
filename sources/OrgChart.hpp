@@ -39,8 +39,7 @@ namespace ariel
             class level_iterator : public iterator<output_iterator_tag, string>
             {
                 public:
-                    
-                    level_iterator(vector<Node*> nodes, bool isEnd = false);
+                    level_iterator(OrgChart& org, vector<Node*> nodes, bool isEnd = false);
                     level_iterator& operator++();
                     string operator*() const;
                     bool operator!=(const level_iterator& other);
@@ -49,20 +48,21 @@ namespace ariel
                 protected:
                     unsigned int _index;
                     vector<Node*> _vectNode;
+                    OrgChart& _org;
 
             };
 
             class Iterator : public level_iterator
             {
                 public:
-                    Iterator(vector<Node*> nodes, bool isEnd = false);
+                    Iterator(OrgChart& org, vector<Node*> nodes, bool isEnd = false);
 
             };
 
-            class reverse_iterator : public OrgChart::level_iterator
+            class reverse_iterator : public level_iterator
             {
                 public:
-                    reverse_iterator(vector<Node*> nodes, bool isEnd = false);
+                    reverse_iterator(OrgChart& org, vector<Node*> nodes, bool isEnd = false);
                 
                 private:
 

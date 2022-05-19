@@ -160,33 +160,33 @@ vector<Node*> OrgChart::getChildrenPointers(Node& node)
 
 OrgChart::Iterator OrgChart::begin()
 {
-    return OrgChart::Iterator(levelOrderVect());
+    return OrgChart::Iterator(*this, levelOrderVect());
 }
 
 OrgChart::Iterator OrgChart::end()
 {
-    return OrgChart::Iterator(levelOrderVect());
+    return OrgChart::Iterator(*this, levelOrderVect());
 }
 
 
 OrgChart::level_iterator OrgChart::begin_level_order()
 {
-    return OrgChart::level_iterator(levelOrderVect());
+    return OrgChart::level_iterator(*this, levelOrderVect());
 }
 
 OrgChart::level_iterator OrgChart::end_level_order()
 {
-    return OrgChart::level_iterator(levelOrderVect(), true);
+    return OrgChart::level_iterator(*this, levelOrderVect(), true);
 }
 
 OrgChart::reverse_iterator OrgChart::begin_reverse_order()
 {
-    return OrgChart::reverse_iterator(levelOrderReverseVect());
+    return OrgChart::reverse_iterator(*this, levelOrderReverseVect());
 }
 
 OrgChart::reverse_iterator OrgChart::end_reverse_order()
 {
-    return OrgChart::reverse_iterator(levelOrderReverseVect(), true);
+    return OrgChart::reverse_iterator(*this, levelOrderReverseVect(), true);
 }
 
 OrgChart::preorder_iterator OrgChart::begin_preorder()
@@ -204,7 +204,7 @@ OrgChart::preorder_iterator OrgChart::end_preorder()
 /******************************* iterator class *******************************/
 
 
-OrgChart::Iterator::Iterator(vector<Node*> nodes, bool isEnd) : level_iterator(nodes, isEnd)
+OrgChart::Iterator::Iterator(OrgChart& org, vector<Node*> nodes, bool isEnd) : level_iterator(org, nodes, isEnd)
 {
     
 }
@@ -214,7 +214,7 @@ OrgChart::Iterator::Iterator(vector<Node*> nodes, bool isEnd) : level_iterator(n
 /******************************* level_iterator class *******************************/
 
 
-OrgChart::level_iterator::level_iterator(vector<Node*> nodes, bool isEnd)
+OrgChart::level_iterator::level_iterator(OrgChart& org, vector<Node*> nodes, bool isEnd) : _org(org)
 {
     _vectNode = nodes;
     _index = isEnd ? _vectNode.size() : 0;
@@ -238,6 +238,10 @@ string OrgChart::level_iterator::operator*() const
 
 bool OrgChart::level_iterator::operator!=(const level_iterator& other)
 {
+    if (&_org != &(other._org))
+    {
+        throw runtime_error("not the same organization");
+    }
     return (_index != other._index &&
             _index < this->_vectNode.size() && _index < other._vectNode.size() && 
             _vectNode[_index] == other._vectNode[_index]);
@@ -253,7 +257,7 @@ const string* OrgChart::level_iterator::operator->()
 /******************************* reverse_iterator class *******************************/
 
 
-OrgChart::reverse_iterator::reverse_iterator(vector<Node*> nodes, bool isEnd) : level_iterator(nodes, isEnd)
+OrgChart::reverse_iterator::reverse_iterator(OrgChart& org, vector<Node*> nodes, bool isEnd) : level_iterator(org, nodes, isEnd)
 {
     
 }

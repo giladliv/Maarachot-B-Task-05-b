@@ -5,6 +5,7 @@
 #include <vector>
 #include <algorithm>
 #include <unordered_map>
+#include <iterator>
 #include "Node.hpp"
 
 using namespace std;
@@ -15,11 +16,17 @@ namespace ariel
     class OrgChart
     {
         private:
-            Node* _root;
-            unordered_map<string, vector<Node*>> _mapNameNodes;
+            Node _root;
+            unordered_map<string, vector<vector<Node>>> _mapNameNodes;
             void restartTree();
-            void addNodeToMap(Node* node);
-            static vector<Node*> levelOrderVect(Node* node);
+            unsigned int addNodeToMap(const string& name);
+            vector<Node*> levelOrderVect();
+            vector<Node*> levelOrderReverseVect();
+            vector<vector<Node*>> levelOrderDetailed();
+            bool isNodeExists(string node);
+            bool isNodeExists(Node& node);
+            vector<Node*> getChildrenPointers(Node& node);
+
 
         public:
             OrgChart();
@@ -29,29 +36,15 @@ namespace ariel
 
             friend ostream& operator<<(ostream& os, OrgChart& org);
 
-            class iterator
+            class level_iterator : public iterator<output_iterator_tag, string>
             {
                 public:
-                    iterator();
-                    iterator& operator++();
-                    string operator*() const;
-                    bool operator!=(const iterator& other);
-                    string* operator->();
-                
-                private:
-                    unsigned int _index;
-                    vector<Node*> _vectNode;
-
-            };
-            
-            class level_iterator
-            {
-                public:
-                    level_iterator(Node * node, bool isEnd = false);
+                    
+                    level_iterator(vector<Node*> nodes, bool isEnd = false);
                     level_iterator& operator++();
                     string operator*() const;
                     bool operator!=(const level_iterator& other);
-                    string* operator->();
+                    const string* operator->();
                     
                 protected:
                     unsigned int _index;
@@ -59,10 +52,17 @@ namespace ariel
 
             };
 
+            class Iterator : public level_iterator
+            {
+                public:
+                    Iterator(vector<Node*> nodes, bool isEnd = false);
+
+            };
+
             class reverse_iterator : public OrgChart::level_iterator
             {
                 public:
-                    reverse_iterator(Node* node, bool isEnd = false);
+                    reverse_iterator(vector<Node*> nodes, bool isEnd = false);
                 
                 private:
 
@@ -81,8 +81,8 @@ namespace ariel
 
             };
 
-            iterator begin();
-            iterator end();
+            Iterator begin();
+            Iterator end();
             level_iterator begin_level_order();
             level_iterator end_level_order();
             reverse_iterator begin_reverse_order();

@@ -2,7 +2,12 @@
 
 using ariel::Node;
 
-Node::Node(const string& str)
+Node::Node() : Node("", 0)
+{
+
+}
+
+Node::Node(const string& str, unsigned int index) : _index(index)
 {
     _name = str;
 }
@@ -12,35 +17,14 @@ Node::~Node()
     
 }
 
-Node* Node::addNext(const string& str)
+Node& Node::operator=(const Node& other)
 {
-    Node* node = new Node(str);
-    
-    if (node != nullptr)
+    if (this == &other)
     {
-        _children.push_back(node);
+        return (*this);
     }
-    
-    return (node);
-}
+    _index = other._index;
+    _name = other._name;
+    return (*this);
 
-void Node::freeAllTree(Node* node)
-{
-    vector<Node*> vectNodes{node};
-    unsigned int i = 0;
-    while (i < vectNodes.size())
-    {
-        if (vectNodes[i] == nullptr)
-        {
-            i++;
-            continue;
-        }
-        
-        vector<Node*> currV = vectNodes[i]->_children;
-        vectNodes.insert(vectNodes.end(), currV.begin(), currV.end());
-        
-        delete vectNodes[i];
-        i++;
-    }
-    
 }

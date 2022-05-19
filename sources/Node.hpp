@@ -11,18 +11,17 @@ namespace ariel
     class Node
     {
         public:
-            Node(const string& str);
-            Node* addNext(const string& str);
+            Node();
+            Node(const string& str, unsigned int index);
             ~Node();
             string& getData() { return _name; }
-            vector<Node*> getNext()  { return (_children); }
-            // vector<Node*> _children;
-            static void freeAllTree(Node* node);
+            unsigned int getIndex() const { return _index; }
+            Node& operator=(const Node& other);
             
             
         private:
             string _name;
-            vector<Node*> _children;
+            unsigned int _index;
             //vector<Node*> _children;
     };
     

@@ -9,6 +9,8 @@
 #include <fstream>
 #include <sstream>
 #include <stdexcept>
+#include <algorithm>
+#include <iterator>
 #include "sources/Node.hpp"
 using namespace std;
 
@@ -45,18 +47,18 @@ int main() {
   for (auto it=organization.begin_preorder(); it!=organization.end_preorder(); ++it) {
     cout << (*it) << " " ;
   }  // prints: CEO CTO VP_SW CFO COO VP_BI
-
+  cout << endl;
   for (string element : organization)
   { // this should work like level order
     cout << element << " " ;
   } // prints: CEO CTO CFO COO VP_SW VP_BI
-
+  cout << endl;
   // demonstrate the arrow operator:
   for (auto it = organization.begin_level_order(); it != organization.end_level_order(); ++it)
   {
     cout << it->size() << " " ;
   } // prints: 3 3 3 3 5 5
-
+  cout << endl;
   // Node a("hello");
   // Node b("World");
   // Node c("Yay");
@@ -74,7 +76,19 @@ int main() {
   // {
   //   cout << (ve[i] == a._children[i] ? "true": "false") << endl;
   // }
+  vector<string> n{"gg", "o", "l"};
+  cout << n.data() << endl;
+  n.clear();
+  n.push_back("j");
+  cout << n.data() << endl;
+  n = vector<string> {"gg", "o", "l"};
+  cout << n.data() << endl;
+
+  OrgChart org;
+  org.add_root("CEO")
+    .add_sub("CEO", "CTO")         // Now the CTO is subordinate to the CEO
+    .add_sub("CEO", "CFO");
   
-  
+  cout << count(organization.begin_level_order(), organization.end_level_order(), "CTO") << endl;
 
 }

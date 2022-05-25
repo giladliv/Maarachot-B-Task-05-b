@@ -23,6 +23,8 @@ namespace ariel
             vector<Node*> levelOrderVect();
             vector<Node*> levelOrderReverseVect();
             vector<vector<Node*>> levelOrderDetailed();
+            vector<Node*> getPreorderNodes();
+            void setPreorderRec(Node& head, vector <Node*>& nodes);
             bool isNodeExists(string node);
             bool isNodeExists(Node& node);
             vector<Node*> getChildrenPointers(Node& node);
@@ -33,16 +35,17 @@ namespace ariel
             ~OrgChart();
             OrgChart& add_root(const string& name);
             OrgChart& add_sub(const string& head, const string& name);
-
+            string toString(Node& head, string s = "");
             friend ostream& operator<<(ostream& os, OrgChart& org);
 
-            class level_iterator : public iterator<output_iterator_tag, string>
+            class Iterator : public iterator<forward_iterator_tag, string>
             {
                 public:
-                    level_iterator(OrgChart& org, vector<Node*> nodes, bool isEnd = false);
-                    level_iterator& operator++();
-                    string operator*() const;
-                    bool operator!=(const level_iterator& other);
+                    Iterator(OrgChart& org, const vector<Node*>& nodes = vector<Node*>(), bool isEnd = false);
+                    Iterator& operator++();
+                    string& operator*() const;
+                    bool operator!=(const Iterator& other);
+                    bool operator==(const Iterator& other);
                     const string* operator->();
                     
                 protected:
@@ -51,33 +54,27 @@ namespace ariel
                     OrgChart& _org;
 
             };
-
-            class Iterator : public level_iterator
+            
+            class level_iterator : public Iterator
             {
                 public:
-                    Iterator(OrgChart& org, vector<Node*> nodes, bool isEnd = false);
+                    level_iterator(OrgChart& org, bool isEnd = false);
 
             };
 
-            class reverse_iterator : public level_iterator
+            class reverse_iterator : public Iterator
             {
                 public:
-                    reverse_iterator(OrgChart& org, vector<Node*> nodes, bool isEnd = false);
+                    reverse_iterator(OrgChart& org, bool isEnd = false);
                 
-                private:
 
             };
 
-            class preorder_iterator
+            class preorder_iterator : public Iterator
             {
                 public:
-                    preorder_iterator();
-                    preorder_iterator& operator++();
-                    string operator*() const;
-                    bool operator!=(const preorder_iterator& other);
-                    string* operator->();
+                    preorder_iterator(OrgChart& org, bool isEnd = false);
                 
-                private:
 
             };
 
@@ -89,6 +86,13 @@ namespace ariel
             reverse_iterator end_reverse_order();
             preorder_iterator begin_preorder();
             preorder_iterator end_preorder();
+
+            // void try_me()
+            // {
+            //     auto b = begin();
+            //     auto e = end_level_order();
+            //     cout << (b != e) << endl;
+            // }
             
     };
     

@@ -13,10 +13,10 @@ namespace ariel
         public:
             Node();
             Node(const string& str, unsigned int index);
-            ~Node();
+            // return data of string
             string& getData() { return _name; }
+            // return index if the node
             unsigned int getIndex() const { return _index; }
-            Node& operator=(const Node& other);
             
             
         private:

@@ -9,6 +9,7 @@
 #include "Node.hpp"
 
 using namespace std;
+
 using ariel::Node;
 
 namespace ariel
@@ -31,33 +32,41 @@ namespace ariel
             vector<vector<Node*>> levelOrderDetailed();
             void setPreorderNodes();
             void setPreorderRec(Node& head);
-            bool isNodeExists(string node);
+            bool isNodeExists(const string& node);
             bool isNodeExists(Node& node);
             vector<Node*> getChildrenPointers(Node& node);
+            string toString(Node& head, const string& s = "");
+            const unsigned int SPACE_NUM = 13;
 
 
         public:
-            OrgChart();
-            ~OrgChart();
+            OrgChart() = default; // Added this little fella
+            ~OrgChart() = default;
+            OrgChart(OrgChart&&) = delete;
+            OrgChart& operator=(OrgChart&&) = delete;
+            OrgChart(const OrgChart& other);
+            OrgChart& operator=(const OrgChart& other);
+
             OrgChart& add_root(const string& name);
             OrgChart& add_sub(const string& head, const string& name);
-            string toString(Node& head, string s = "");
+            string toString();
             friend ostream& operator<<(ostream& os, OrgChart& org);
 
+            // the iterator is the forward iterator style
             class Iterator : public iterator<forward_iterator_tag, string>
             {
                 public:
-                    Iterator(OrgChart& org, const vector<Node*>& nodes = vector<Node*>(), bool isEnd = false);
+                    Iterator(const OrgChart& org, const vector<Node*>& nodes = vector<Node*>(), bool isEnd = false);
                     Iterator& operator++();
                     string& operator*() const;
                     bool operator!=(const Iterator& other);
                     bool operator==(const Iterator& other);
                     const string* operator->();
                     
-                protected:
+                private:
                     unsigned int _index;
                     const vector<Node*>& _vectNode;
-                    OrgChart& _org;
+                    const OrgChart& _org;
 
             };
             
@@ -90,15 +99,9 @@ namespace ariel
             level_iterator end_level_order();
             reverse_iterator begin_reverse_order();
             reverse_iterator end_reverse_order();
+            reverse_iterator reverse_order();
             preorder_iterator begin_preorder();
             preorder_iterator end_preorder();
-
-            // void try_me()
-            // {
-            //     auto b = begin();
-            //     auto e = end_level_order();
-            //     cout << (b != e) << endl;
-            // }
             
     };
     

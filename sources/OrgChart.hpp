@@ -18,13 +18,19 @@ namespace ariel
         private:
             Node _root;
             unordered_map<string, vector<vector<Node>>> _mapNameNodes;
+            vector<Node*> _preOrder;
+            vector<Node*> _levelOrder;
+            vector<Node*> _reverseOrder;
+
             void restartTree();
             unsigned int addNodeToMap(const string& name);
-            vector<Node*> levelOrderVect();
-            vector<Node*> levelOrderReverseVect();
+            void setAllOrders();
+            
+            void setLevelOrderVect(const vector<vector<Node*>>& detailed);
+            void setLevelOrderReverseVect(const vector<vector<Node*>>& detailed);
             vector<vector<Node*>> levelOrderDetailed();
-            vector<Node*> getPreorderNodes();
-            void setPreorderRec(Node& head, vector <Node*>& nodes);
+            void setPreorderNodes();
+            void setPreorderRec(Node& head);
             bool isNodeExists(string node);
             bool isNodeExists(Node& node);
             vector<Node*> getChildrenPointers(Node& node);
@@ -50,7 +56,7 @@ namespace ariel
                     
                 protected:
                     unsigned int _index;
-                    vector<Node*> _vectNode;
+                    const vector<Node*>& _vectNode;
                     OrgChart& _org;
 
             };

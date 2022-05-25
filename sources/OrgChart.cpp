@@ -21,7 +21,9 @@ OrgChart& OrgChart::add_root(const string& name)
     restartTree();
     _root = Node(name, 0);
     addNodeToMap(name);
+    setAllOrders();
     return (*this);
+
 }
 
 OrgChart& OrgChart::add_sub(const string& head, const string& name)
@@ -35,7 +37,7 @@ OrgChart& OrgChart::add_sub(const string& head, const string& name)
     // the index of the node is returned from adding
     unsigned int index = addNodeToMap(name);
     _mapNameNodes[head][addIndex].push_back(Node(name, index));
-    
+    setAllOrders();
     return (*this);
 }
 
@@ -64,7 +66,6 @@ bool OrgChart::isNodeExists(Node& node)
  */
 unsigned int OrgChart::addNodeToMap(const string& name)
 {
-    
     // if name does not exsist create it
     if (!isNodeExists(name))
     {
@@ -73,35 +74,45 @@ unsigned int OrgChart::addNodeToMap(const string& name)
     unsigned int index = _mapNameNodes[name].size();
     // give him the firs index
     _mapNameNodes[name].push_back(vector<Node>());
+    
     return (index);
 }
 
 void OrgChart::restartTree()
 {
     _mapNameNodes.clear();
+    _levelOrder.clear();
+    _reverseOrder.clear();
+    _preOrder.clear();
     _root = Node();
 }
 
-vector<Node*> OrgChart::levelOrderVect()
+void OrgChart::setAllOrders()
 {
-    vector<Node*> vectNodes = vector<Node*>();
-    for (vector<Node*> line : levelOrderDetailed())
-    {
-        vectNodes.insert(vectNodes.end(), line.begin(), line.end());
-    }
-    
-    return (vectNodes);
+    vector<vector<Node*>> detailed = levelOrderDetailed();
+    setLevelOrderVect(detailed);
+    setLevelOrderReverseVect(detailed);
+    setPreorderNodes();
 }
 
-vector<Node*> OrgChart::levelOrderReverseVect()
+void OrgChart::setLevelOrderVect(const vector<vector<Node*>>& detailed)
 {
-    vector<Node*> vectNodes = vector<Node*>();
-    for (vector<Node*> line : levelOrderDetailed())
+    _levelOrder.clear();
+    for (const vector<Node*>& line : levelOrderDetailed())
     {
-        vectNodes.insert(vectNodes.begin(), line.begin(), line.end());
+        _levelOrder.insert(_levelOrder.end(), line.begin(), line.end());
     }
-    
-    return (vectNodes);
+    _levelOrder.push_back(nullptr);
+}
+
+void OrgChart::setLevelOrderReverseVect(const vector<vector<Node*>>& detailed)
+{
+    _reverseOrder.clear();
+    for (const vector<Node*>& line : levelOrderDetailed())
+    {
+        _reverseOrder.insert(_reverseOrder.begin(), line.begin(), line.end());
+    }
+    _reverseOrder.push_back(nullptr);
 }
 
 vector<vector<Node*>> OrgChart::levelOrderDetailed()
@@ -135,29 +146,29 @@ vector<vector<Node*>> OrgChart::levelOrderDetailed()
     return (nodeLines);
 }
 
-vector<Node*> OrgChart::getPreorderNodes()
+void OrgChart::setPreorderNodes()
 {
-    vector<Node*> nodes;
-    setPreorderRec(_root, nodes);
-    return nodes;
+    _preOrder.clear();
+    setPreorderRec(_root);
+    _preOrder.push_back(nullptr);
 
 }
 
 // by given vector create the preorder vector
-void OrgChart::setPreorderRec(Node& head, vector <Node*>& nodes)
+void OrgChart::setPreorderRec(Node& head)
 {
     if (!isNodeExists(head))
     {
         return;
     }
-    nodes.push_back(&head);
+    _preOrder.push_back(&head);
     for (Node* node : getChildrenPointers(head))
     {
         if (node == nullptr)
         {
             continue;
         }
-        setPreorderRec(*node, nodes);
+        setPreorderRec(*node);
     }
 }
 
@@ -236,12 +247,12 @@ string OrgChart::toString(Node& head, string s)
 
 OrgChart::Iterator OrgChart::begin()
 {
-    return OrgChart::Iterator(*this, levelOrderVect());
+    return OrgChart::Iterator(*this, _levelOrder);
 }
 
 OrgChart::Iterator OrgChart::end()
 {
-    return OrgChart::Iterator(*this, levelOrderVect(), true);
+    return OrgChart::Iterator(*this, _levelOrder, true);
 }
 
 
@@ -280,12 +291,10 @@ OrgChart::preorder_iterator OrgChart::end_preorder()
 
 
 
-OrgChart::Iterator::Iterator(OrgChart& org, const vector<Node*>& nodes, bool isEnd) : _org(org)
+OrgChart::Iterator::Iterator(OrgChart& org, const vector<Node*>& nodes, bool isEnd) : _org(org), _vectNode(nodes)
 {
-    _vectNode = nodes;
     //take the size as the last index
-    _index = isEnd ? _vectNode.size() : 0;
-    _vectNode.push_back(nullptr);
+    _index = isEnd ? _vectNode.size() - 1 : 0;
 }
 
 OrgChart::Iterator& OrgChart::Iterator::operator++()
@@ -329,7 +338,7 @@ const string* OrgChart::Iterator::operator->()
 /******************************* level_iterator class *******************************/
 
 
-OrgChart::level_iterator::level_iterator(OrgChart& org, bool isEnd) : Iterator(org, org.levelOrderVect(), isEnd)
+OrgChart::level_iterator::level_iterator(OrgChart& org, bool isEnd) : Iterator(org, org._levelOrder, isEnd)
 {
 
 }
@@ -337,7 +346,7 @@ OrgChart::level_iterator::level_iterator(OrgChart& org, bool isEnd) : Iterator(o
 /******************************* reverse_iterator class *******************************/
 
 
-OrgChart::reverse_iterator::reverse_iterator(OrgChart& org, bool isEnd) : Iterator(org, org.levelOrderReverseVect(), isEnd)
+OrgChart::reverse_iterator::reverse_iterator(OrgChart& org, bool isEnd) : Iterator(org, org._reverseOrder, isEnd)
 {
     
 }
@@ -346,7 +355,7 @@ OrgChart::reverse_iterator::reverse_iterator(OrgChart& org, bool isEnd) : Iterat
 /******************************* preorder_iterator class *******************************/
 
 
-OrgChart::preorder_iterator::preorder_iterator(OrgChart& org, bool isEnd) : Iterator(org, org.getPreorderNodes(), isEnd)
+OrgChart::preorder_iterator::preorder_iterator(OrgChart& org, bool isEnd) : Iterator(org, org._preOrder, isEnd)
 {
 
 }

@@ -22,7 +22,6 @@ namespace ariel
         private:
             string _name;
             unsigned int _index;
-            //vector<Node*> _children;
     };
     
 }
